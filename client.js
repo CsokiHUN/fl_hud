@@ -5,8 +5,6 @@ function getMugshot() {
   mug = RegisterPedheadshotTransparent(ped);
 
   setTimeout(() => {
-    console.log(IsPedheadshotReady(mug), IsPedheadshotValid(mug));
-
     SendNUIMessage({
       mugshot: GetPedheadshotTxdString(mug),
     });
@@ -15,10 +13,17 @@ function getMugshot() {
   }, 500);
 }
 
+function resourceStart() {
+  getMugshot();
+  SendNUIMessage({
+    serverId: GetPlayerServerId(PlayerId()),
+  });
+}
+setTimeout(resourceStart, 2000);
+
 onNet('playerSpawned', () => {
-  setTimeout(getMugshot, 2000);
+  setTimeout(resourceStart, 2000);
 });
-setTimeout(getMugshot, 1000);
 
 on('onClientResourceStop', (resourceName) => {
   if (GetCurrentResourceName() != resourceName) {
@@ -45,6 +50,7 @@ setInterval(async () => {
 setInterval(async () => {
   const hunger = await getStatus('hunger');
   const thirst = await getStatus('thirst');
+
   SendNUIMessage({
     hunger,
     thirst,

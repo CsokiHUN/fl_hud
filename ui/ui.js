@@ -48,13 +48,17 @@ Object.entries(hudElements).forEach((elem) => {
 
 window.addEventListener('message', ({ data }) => {
   if (data.mugshot != undefined) {
-    const elem = document.querySelector('.character');
+    const elem = Main.querySelector('.character');
     elem.style.backgroundImage = `url('https://nui-img/${data.mugshot}/${data.mugshot}')`;
     return;
   }
 
   if (data.visible != undefined) {
     Main.style.display = (data.visible && 'flex') || 'none';
+  }
+
+  if (data.serverId != undefined) {
+    Main.querySelector('#id').innerText = data.serverId;
   }
 
   Object.entries(data).forEach((elem) => {
@@ -66,7 +70,7 @@ window.addEventListener('message', ({ data }) => {
       });
 
       if (hudElements[name].blinking) {
-        const elem = document.querySelector('#' + name);
+        const elem = Main.querySelector('#' + name);
         if (value < 25) {
           elem.classList.add(
             'animate__animated',
