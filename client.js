@@ -1,16 +1,39 @@
 let mug = false;
 
-function getMugshot() {
-  const ped = PlayerPedId();
+function modelLoadedAsync() {
+  return new Promise((resolve) => {
+    const timer = setInterval(() => {
+      const ped = PlayerPedId();
+      const model = GetEntityModel(ped);
+
+      if (model && HasModelLoaded(model)) {
+        resolve(ped);
+        clearInterval(timer);
+      }
+    }, 100);
+  });
+}
+
+async function getMugshot() {
+  const ped = await modelLoadedAsync();
+
   mug = RegisterPedheadshotTransparent(ped);
 
-  setTimeout(() => {
-    SendNUIMessage({
-      mugshot: GetPedheadshotTxdString(mug),
-    });
+  const timer = setInterval(() => {
+    if (!IsPedheadshotValid(mug)) {
+      UnregisterPedheadshot(mug);
 
-    UnregisterPedheadshot(mug);
-  }, 500);
+      mug = RegisterPedheadshotTransparent(ped);
+    } else {
+      if (IsPedheadshotReady(mug)) {
+        SendNUIMessage({
+          mugshot: GetPedheadshotTxdString(mug),
+        });
+        UnregisterPedheadshot(mug);
+        clearInterval(timer);
+      }
+    }
+  }, 100);
 }
 
 function resourceStart() {
