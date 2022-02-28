@@ -52,10 +52,7 @@ on('onClientResourceStop', (resourceName) => {
   if (GetCurrentResourceName() != resourceName) {
     return;
   }
-  if (!mug) {
-    return;
-  }
-  UnregisterPedheadshot(mug);
+  if (mug) UnregisterPedheadshot(mug);
 });
 
 setInterval(async () => {
@@ -64,7 +61,7 @@ setInterval(async () => {
 
   SendNUIMessage({
     visible: !IsPauseMenuActive(),
-    health: GetEntityHealth(ped) - 100,
+    health: GetEntityHealth(ped) - (GetEntityMaxHealth(ped) === 175 ? 75 : 100),
     armor: GetPedArmour(ped),
     stamina: 100 - GetPlayerSprintStaminaRemaining(playerId),
   });
