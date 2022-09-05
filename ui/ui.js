@@ -87,12 +87,4 @@ window.addEventListener('message', ({ data }) => {
       }
     }
   });
-
-  // if (data.hunger != undefined) {
-  //   if (!hudElements.hunger.value ||)
-
-  //   $('#hunger').circleProgress({
-  //     value: data.hunger / 100,
-  //   });
-  // }
 });
